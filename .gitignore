@@ -1,0 +1,10 @@
+# global
+.env
+*.log
+__pycache__/
+*.pyc
+node_modules/
+dist/
+frontend/dist/
+.vscode/
+.idea/

@@ -1,0 +1,37 @@
+services:
+  raindrop-db:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - raindrop-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+
+  raindrop-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - raindrop-db
+    environment:
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
+    env_file:
+      - .env
+
+  raindrop-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - raindrop-backend
+
+volumes:
+  raindrop-data:
